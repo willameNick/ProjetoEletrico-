@@ -1,0 +1,7 @@
+{
+  "appId": "com.nick.projetoeletrico",
+  "appName": "Projeto Elétrico MT/BT",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "android": { "allowMixedContent": false }
+}

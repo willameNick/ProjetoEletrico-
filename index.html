@@ -1,0 +1,249 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Projeto Elétrico MT/BT</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Ctext y='14' font-size='14'%3E⚡%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#f6f7f9;--fg:#1b1f24;--card:#fff;--bd:#d5d9df;--ac:#0a58ca;--ok:#1a7f37;--wa:#b7791f;--er:#c62828;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14171b;--fg:#e8eaed;--card:#1e2329;--bd:#3a414a;--ac:#4d8dff;--ok:#2e9e4f;--wa:#c58a2b;--er:#e05252;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--fg);font:14px system-ui,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);border-bottom:1px solid var(--bd);padding:8px 10px;z-index:5}
+h1{font-size:15px;margin:0 0 6px}h3{margin:0 0 8px;font-size:14px}h4{margin:12px 0 4px}
+#st{display:flex;gap:4px;overflow-x:auto}#st button{flex:1;white-space:nowrap}
+main{padding:10px;max-width:900px;margin:auto}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:10px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+label{display:flex;flex-direction:column;font-size:12px;gap:2px}
+input,select,button,textarea{font:inherit;color:inherit;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:6px;min-width:0}
+button{cursor:pointer}button.on,.pr{background:var(--ac);color:#fff;border-color:var(--ac)}
+.sc{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12px}td,th{border-bottom:1px solid var(--bd);padding:3px;text-align:left}td input,td select{width:100%;min-width:70px}.n{min-width:56px!important}
+.b{font-size:11px;padding:1px 6px;border-radius:9px;color:#fff;font-weight:600}.b.ok{background:var(--ok)}.b.wa{background:var(--wa)}.b.er{background:var(--er)}
+.m{opacity:.7;font-size:12px}.al{border-left:4px solid var(--er);padding-left:8px}textarea{width:100%;height:260px;font:11px monospace}
+.nav{display:flex;justify-content:space-between;gap:8px}.nav button{flex:1;padding:10px}
+header{background:var(--ac);color:#fff;border:0;transition:background .3s}h1{color:#fff}#st button{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.35)}#st button.on{background:#fff;color:var(--ac);font-weight:700}.c{border-top:3px solid var(--ac)}h3{color:var(--ac)}th{background:rgba(127,127,127,.15)}tr:nth-child(even) td{background:rgba(127,127,127,.07)}
+@keyframes dr{to{stroke-dashoffset:0}}@keyframes fi{to{opacity:1}}.an line,.an circle{stroke-dasharray:1;stroke-dashoffset:1;animation:dr .5s ease forwards}.an .z{stroke-dasharray:4;stroke-dashoffset:0;opacity:0;animation:fi .6s forwards}.an text{opacity:0;animation:fi .4s forwards}.lg{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:12px;margin-bottom:6px}.lg i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:3px}
+@media print{body *{visibility:hidden}#res,#res *{visibility:visible}#res{position:absolute;left:0;top:0;width:100%}.np{display:none!important}.c{border:0}}
+</style><script src="jspdf.umd.min.js"></script></head><body>
+<header><h1>⚡ Projeto Elétrico MT/BT — Equatorial Piauí</h1><div id="st"></div></header>
+<main><div id="v"></div><div class="nav np"><button data-n="-1">◀ Voltar</button><button class="pr" data-n="1">Avançar ▶</button></div></main>
+<script>
+const N=v=>+v||0,f=(x,d=2)=>(+x).toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:d}),$=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const asc=s=>String(s).replace(/Ω/g,'ohm').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\x20-\x7e]/g,'?');
+const TR=[15,30,45,75,112.5,150,225,300,500,750,1000,1500],DJ=[16,20,25,32,40,50,63,70,80,100,125,150,175,200,225,250,300,350,400,500,630,800,1000,1250,1600,2000],ELO=[1,2,3,5,6,8,10,12,15,20,25,30,40,50,65,80,100],MTS=[25,35,50,70,95,120,150,185,240];
+const CAB=[[1.5,17.5,14.8],[2.5,24,8.89],[4,32,5.57],[6,41,3.71],[10,57,2.24],[16,76,1.41],[25,101,.889],[35,125,.641],[50,151,.473],[70,192,.328],[95,232,.236],[120,269,.188],[150,309,.153],[185,353,.123],[240,415,.0943]];
+const FDc={'Bomba de combustível':.8,'Iluminação':1,'Conveniência':.8,'Ar-condicionado':.9,'Compressor':.8,'Motor':.75,'Outros':.7};
+const ZN=[['T','Trafo / medição'],['K','Tanque subterrâneo'],['R','Respiro'],['B','Boca de descarga'],['P','Pista de abastecimento']];
+let S={g:{nome:'',doc:'',ie:'',end:'',bairro:'',cep:'',mun:'',lat:'',lon:'',tipo:'Posto de Combustíveis',vp:13.8,vs:380},
+cg:[{d:'Bombas (4 bicos)',c:'Bomba de combustível',q:4,p:1.5,fp:.85,fd:.8},{d:'Iluminação pista/loja',c:'Iluminação',q:1,p:6,fp:.95,fd:1},{d:'Conveniência',c:'Conveniência',q:1,p:12,fp:.9,fd:.8},{d:'Split 24.000 BTU',c:'Ar-condicionado',q:3,p:2.6,fp:.85,fd:.9}],
+t:{mg:20,sub:'Abrigada',z:3.5,icc:3},
+c:{k:.8,cos:.92,tr:[{n:'Ramal BT trafo→QGBT',l:15,pc:100,lim:2},{n:'Distribuição QGBT→QDs',l:40,pc:60,lim:2},{n:'Terminal (maior circuito)',l:30,pc:25,lim:4}],lm:40,rho:300,lr:10,t:.5,hn:2.4},
+a:{W:30,H:40,e:{T:[2,2],K:[14,20],R:[24,20],B:[18,25],P:[10,32]},m:{K:7.5,R:7.5,B:7.5,P:7.5}}};
+try{const x=JSON.parse(localStorage.pe);if(x&&x.cg&&x.c&&x.a)S=x}catch(_){}
+fix();
+const NATIVE=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
+const b64=b=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(String(fr.result).split(',')[1]);fr.readAsDataURL(b)});
+async function saveFile(name,blob){if(NATIVE){try{const pl=n=>Capacitor.Plugins[n]||Capacitor.registerPlugin(n),w=await pl('Filesystem').writeFile({path:name,data:await b64(blob),directory:'CACHE'});await pl('Share').share({title:name,url:w.uri,dialogTitle:'Salvar / compartilhar'})}catch(e){tz('Falha ao salvar: '+e.message)}return}const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+const save=()=>{try{localStorage.pe=JSON.stringify(S)}catch(_){}};
+function fix(){S.w=S.w||{fs:1.2,m:[{a:1,r:''},{a:2,r:''},{a:4,r:''},{a:8,r:''}]};S.mp=S.mp||{c:[-5.0892,-42.8019],z:17,pts:[],rua:'',tipo:'Poste Equatorial (conexão)',tiles:1};S.md=S.md||{dir:100,cl:'0,6',alt:'1,5',loc:'no limite da propriedade, voltado para a via pública'}}
+let CFG={url:'',key:'',tok:''},msg='',RL=[];try{CFG=Object.assign(CFG,JSON.parse(localStorage.pcfg))}catch(_){}
+const lst=()=>{try{return JSON.parse(localStorage.plist||'[]')}catch(_){return[]}};
+const wst=()=>{const v=S.w.m.filter(x=>N(x.a)>0&&N(x.r)>0).map(x=>2*Math.PI*N(x.a)*N(x.r)),m=v.length?v.reduce((a,b)=>a+b)/v.length:0;return{v,n:v.length,m,pj:m*N(S.w.fs),d:m?(Math.max(...v)-Math.min(...v))/m:0}};
+const wn=()=>{const s=wst();return s.n?`, obtido de ensaio Wenner (${s.n} medidas, média ${f(s.m,1)} Ω·m, fator sazonal ${S.w.fs})`:''};
+const WRES=()=>{const s=wst();return `<div class="c"><h3>Resultado Wenner</h3>${tb(['a (m)','R (Ω)','ρ (Ω·m)'],S.w.m.map(x=>[x.a,x.r,N(x.r)?f(2*Math.PI*N(x.a)*N(x.r),1):'—']))}${s.n?`<p>ρ médio <b>${f(s.m,1)}</b> Ω·m · ρ de projeto (× ${S.w.fs}) <b>${f(s.pj,1)}</b> Ω·m ${s.d>.5?B('wa')+' dispersão alta: conferir medidas':B('ok')}</p><button class="np" data-a="wu">Usar ρ de projeto no cálculo</button>`:'<p class="m">Informe a e R medidos.</p>'}</div>`};
+const WEN=()=>`<div class="c"><h3>Ensaio de resistividade (Wenner)</h3><div class="sc"><table><tr><th>a (m)<th>R medido (Ω)<th></tr>${S.w.m.map((x,k)=>`<tr><td>${n2(`w.m.${k}.a`)}<td>${n2(`w.m.${k}.r`)}<td><button data-a="wd" data-k="${k}">✕</button>`).join('')}</table></div><button data-a="wa">+ Medida</button><div class="g">${i('w.fs','Fator sazonal (solo seco = maior)','number')}</div></div>`;
+const MED=()=>`<div class="c"><h3>Medição (caixa Equatorial)</h3><div class="g">${i('md.dir','Limite de medição direta (A)','number')}${i('md.cl','Classe do TC')}${i('md.alt','Altura do medidor (m)')}${i('md.loc','Local da caixa')}</div><p class="m">Valores de referência editáveis: confirmar na NDU de medição vigente da Equatorial.</p></div>`;
+const medi=R=>({ind:R.Ib>N(S.md.dir),tc:[100,150,200,250,300,400,500,600,800,1000,1200,1500,2000].find(x=>x>=R.Is)||2000});
+const MTBL=R=>{const m=medi(R),d=S.md;return tb(['Item','Definição'],[['Tipo de medição',m.ind?'<b>Indireta</b> (TCs): Ib '+f(R.Ib,0)+' A > '+d.dir+' A':'<b>Direta</b>: Ib '+f(R.Ib,0)+' A ≤ '+d.dir+' A'],...(m.ind?[['TCs',`3 × ${m.tc}/5 A, classe ${esc(d.cl)}`]]:[]),['Medidor','Eletrônico 3 elementos, 4 fios, kWh/kvarh'],['Altura do medidor',esc(d.alt)+' m'],['Local da caixa',esc(d.loc)],['Aterramento da caixa','ligado à malha (haste/cabo)']])};
+const MRES=R=>`<div class="c"><h3>Medição</h3>${MTBL(R)}</div>`;
+function med(R){const D=mk(),{T,L,C,X}=D,m=medi(R),xs=[60,110,160];D.k('eq');X(20,24,300,160);T(26,38,'Caixa de medição Equatorial',11);
+D.k('bt');xs.forEach((x,k)=>{L(x,210,x,10);T(x-4,222,'ABC'[k],10)});T(10,236,'Do trafo',9);T(10,8,'Ao QGBT',9);
+xs.forEach((x,k)=>{if(m.ind){D.k('eq');C(x,110,10);D.k('tk');L(x+10,110,220,70+k*12)}else{D.k('tk');L(x,100,220,70+k*12)}});
+D.k('tk');T(26,176,m.ind?`3 TC ${m.tc}/5 A cl. ${S.md.cl}`:'Medição direta',10);D.k('eq');X(220,50,80,60);T(228,66,'kWh',11);T(228,80,'3 elem.',9);T(228,92,'4 fios',9);
+D.k('te');L(20,170,6,170);L(6,170,6,230);T(4,248,'Terra da caixa',9);return{P:D.P,w:330,h:256}}
+const PRJ=()=>`<h3>Projetos</h3><p>${esc(msg)}</p><div class="g"><label>URL do Supabase<input data-c="url" placeholder="https://xxxx.supabase.co" value="${esc(CFG.url)}"></label><label>Chave anon<input data-c="key" value="${esc(CFG.key)}"></label><label>E-mail<input data-c="em" type="email" value="${esc(CFG.em||'')}"></label><label>Senha<input data-c="pw" type="password" value=""></label></div><p>${CFG.tok?'🔒 Conectado'+(CFG.em?' como '+esc(CFG.em):''):'Sem login (usa a chave anon)'} <button data-a="li">Entrar</button> <button data-a="su">Criar conta</button> <button data-a="lg">Sair</button></p><p><button class="pr" data-a="sl">Salvar neste aparelho</button> <button data-a="sr">Salvar no Supabase</button> <button data-a="lr">Listar do Supabase</button></p><h4>Neste aparelho</h4>${tb(['Projeto','Data',''],lst().map(x=>[esc(x.nome),x.ts,`<button data-a="lo" data-k="${x.id}">Abrir</button> <button data-a="ld" data-k="${x.id}">✕</button>`]))}<h4>Supabase</h4>${tb(['Projeto','Atualizado',''],RL.map(x=>[esc(x.nome),new Date(x.updated_at).toLocaleString('pt-BR'),`<button data-a="ro" data-k="${x.id}">Abrir</button>`]))}<h4>SQL (rodar uma vez no Supabase)</h4><textarea readonly style="height:130px">create table projetos(id uuid primary key,nome text,dados jsonb,user_id uuid default auth.uid(),updated_at timestamptz default now());\nalter table projetos enable row level security;\ncreate policy "donos" on projetos for all to authenticated using(user_id=auth.uid()) with check(user_id=auth.uid());\n-- ative Auth > Email no Supabase; cada usuário vê apenas os próprios projetos.</textarea><p class="m">Chamadas ao Supabase são bloqueadas na página publicada; funcionam no APK (Capacitor), PWA ou site próprio.</p>`;
+const uid=()=>crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c=='x'?r:r&3|8).toString(16)});
+const Hd=()=>({apikey:CFG.key,Authorization:'Bearer '+(CFG.tok||CFG.key),'Content-Type':'application/json'}),U=p=>CFG.url.replace(/\/$/,'')+'/rest/v1/'+p,say=m=>{msg=m;upd()};
+const PA={
+sl(){S.id=S.id||uid();const l=lst().filter(x=>x.id!=S.id);l.unshift({id:S.id,nome:S.g.nome||'(sem nome)',ts:new Date().toLocaleString('pt-BR'),d:JSON.parse(JSON.stringify(S))});try{localStorage.plist=JSON.stringify(l)}catch(_){}save();say('Salvo neste aparelho.')},
+async sr(){if(!CFG.url||!CFG.key)return say('Informe URL e chave do Supabase.');S.id=S.id||uid();save();say('Enviando…');try{const r=await fetch(U('projetos?on_conflict=id'),{method:'POST',headers:{...Hd(),Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({id:S.id,nome:S.g.nome||'(sem nome)',dados:S,updated_at:new Date().toISOString()})});say(r.ok?'Salvo no Supabase.':'Erro '+r.status+': '+await r.text())}catch(e){say('Falha de rede: '+e.message)}},
+async lr(){if(!CFG.url||!CFG.key)return say('Informe URL e chave do Supabase.');try{const r=await fetch(U('projetos?select=id,nome,updated_at&order=updated_at.desc'),{headers:Hd()});if(!r.ok)return say('Erro '+r.status+': '+await r.text());RL=await r.json();say(RL.length+' projeto(s) no Supabase.')}catch(e){say('Falha de rede: '+e.message)}},
+async ro(d){try{const r=await fetch(U('projetos?id=eq.'+d.k+'&select=dados'),{headers:Hd()}),j=await r.json();if(j[0]){S=j[0].dados;fix();save();render()}else say('Projeto não encontrado.')}catch(e){say('Falha de rede: '+e.message)}},
+lo(d){const x=lst().find(y=>y.id==d.k);if(x){S=x.d;fix();save();render()}},
+ld(d){try{localStorage.plist=JSON.stringify(lst().filter(x=>x.id!=d.k))}catch(_){}say('Excluído.')},
+wa(){S.w.m.push({a:16,r:''});save();render()},wd(d){S.w.m.splice(+d.k,1);save();render()},wu(){S.c.rho=Math.round(wst().pj);save();render()}};
+const pz=s=>String(s??'').replace(/Ω/g,'ohm').replace(/ρ/g,'rho').replace(/Δ/g,'D').replace(/≤/g,'<=').replace(/≥/g,'>=').replace(/→/g,'->').replace(/[—–]/g,'-').replace(/₁/g,'1').replace(/²/g,'2').replace(/³/g,'3').replace(/[^\x00-\xff]/g,'?'),hx=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const tz=h=>{let t=$('#tz');if(!t){t=document.createElement('div');t.id='tz';t.className='np';t.style.cssText='position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px;z-index:9';document.body.appendChild(t)}t.innerHTML=h+' <button onclick="this.parentNode.remove()">✕</button>'};
+PA.pdf=function(){const J=window.jspdf;if(!J)return tz('jsPDF não carregou (sem internet ou bloqueado).');
+const R=calc(),g=S.g,c=S.c,t=S.t,d=new J.jsPDF({unit:'mm',format:'a4'}),W=210,M=15;let y=M;d.setTextColor(0);
+const nf=h=>{if(y+h>285){d.addPage();y=M}},
+H=s=>{nf(12);y+=3;d.setFont('helvetica','bold').setFontSize(12).setTextColor(10,88,202);d.text(pz(s),M,y);y+=6;d.setTextColor(0)},
+P=s=>{d.setFont('helvetica','normal').setFontSize(10);d.splitTextToSize(pz(s),W-2*M).forEach(l=>{nf(5);d.text(l,M,y);y+=5})},
+TB=(hd,rows,cw)=>{cw=cw||hd.map(()=>(W-2*M)/hd.length);const tw=cw.reduce((a,v)=>a+v),row=(r,b)=>{d.setFont('helvetica',b?'bold':'normal').setFontSize(9);const L=r.map((v,k)=>d.splitTextToSize(pz(v),cw[k]-2)),hh=Math.max(...L.map(x=>x.length))*4+2;nf(hh);if(b){d.setFillColor(230,234,240);d.rect(M,y,tw,hh,'F')}let x=M;L.forEach((l,k)=>{d.text(l,x+1,y+4);x+=cw[k]});d.setDrawColor(200);d.setLineWidth(.2);d.line(M,y+hh,M+tw,y+hh);y+=hh};row(hd,1);rows.forEach(r=>row(r));y+=5},
+DRW=(dr,s)=>{d.addPage();y=M;H(s);const k=Math.min((W-2*M)/dr.w,(285-y)/dr.h),ox=M,oy=y;d.setLineWidth(.3);
+dr.P.forEach(p=>{const cl=hx(PAL[p.k]||'#222222');d.setDrawColor(...cl);d.setTextColor(...cl);
+if(p.t=='L')d.line(ox+p.a*k,oy+p.b*k,ox+p.c*k,oy+p.d*k);
+else if(p.t=='C'){if(p.z){d.setDrawColor(198,40,40);d.setLineDashPattern([1.5,1],0)}d.circle(ox+p.x*k,oy+p.y*k,p.r*k);d.setLineDashPattern([],0)}
+else{d.setFont('helvetica','normal').setFontSize(p.h*k*2.835);d.text(pz(p.s),ox+p.x*k,oy+p.y*k)}});d.setTextColor(0);d.setDrawColor(0)};
+d.setFont('helvetica','bold').setFontSize(16);d.text('MEMORIAL DESCRITIVO E DE CALCULO',M,y+4);y+=12;
+P('Projeto eletrico - '+g.tipo);P([g.nome,g.doc,g.ie&&'IE '+g.ie].filter(Boolean).join(' | '));P([[g.end,g.bairro,g.mun&&g.mun+'/PI'].filter(Boolean).join(', '),g.cep&&'CEP '+g.cep,g.lat!==''&&g.lon!==''&&`Coord. ${g.lat}, ${g.lon}`].filter(Boolean).join(' | '));P('Data: '+new Date().toLocaleDateString('pt-BR'));
+if(R.viol){d.setTextColor(198,40,40);P('PENDENCIA: violacao de distancia de area classificada (NBR 14639).');d.setTextColor(0)}
+H('1. Objeto e normas');P(`Entrada de energia em ${g.vp} kV com subestacao ${t.sub.toLowerCase()} de ${R.tr} kVA. Atende ABNT NBR 5410, NBR 14039, NBR 14639 e NDUs vigentes da Equatorial Piaui.`);
+H('2. Cargas');TB(['Descricao','Qtd','kW un.','FP','FD'],S.cg.map(x=>[x.d,x.q,x.p,x.fp,x.fd]),[70,20,30,30,30]);P(`Instalada ${f(R.Pi)} kW | Demanda ${f(R.Dw)} kW / ${f(R.Dk)} kVA | com margem de ${t.mg}%: ${f(R.Sr)} kVA.`);
+H('3. Transformador');P(`${R.tr} kVA, Z = ${f(t.z,1)} %. In(BT) = ${f(R.Is,1)} A; In(MT) = ${f(R.Ip,2)} A.`);
+H('4. Curto-circuito e protecoes');P(`Icc rede = ${f(R.Iccp)} kA (${f(R.Scc,1)} MVA). Z total = ${f(R.Zt)} %. Icc secundario = ${f(R.Iccs)} kA. Elo ${R.elo}K; disjuntor geral ${R.dj} A, PdI >= ${f(R.Iccs,1)} kA. Cabo MT ${R.mt} mm2 (secao termica minima ${f(R.smin,1)} mm2, t = ${c.t} s).`);
+H('5. Condutores e queda de tensao');TB(['Trecho','L (m)','I (A)','Cabo','dV %'],R.tc.map(x=>[x.n,f(x.l,0),f(x.I,1),(x.np>1?x.np+'x ':'')+x.s+' mm2',x.bad?'-':f(x.dv)]),[70,20,25,35,30]);P(`dV total BT ${f(R.dvT)} % (limite 4 %). Fator de correcao ${c.k}.`);
+H('6. Aterramento');P(`rho = ${c.rho} ohm.m${wn()}; haste ${c.hn} m: R1 = ${f(R.R1)} ohm. Adotadas ${R.nh} hastes, R = ${f(R.Rn)} ohm (limite ${c.lr} ohm).`+(R.Rn>N(c.lr)?' NAO ATENDE o limite: revisar (malha, tratamento do solo ou limite aplicavel).':''));
+const ws=wst();if(ws.n)TB(['a (m)','R (ohm)','rho (ohm.m)'],S.w.m.filter(x=>N(x.a)>0&&N(x.r)>0).map(x=>[x.a,x.r,f(2*Math.PI*N(x.a)*N(x.r),1)]),[60,60,60]);
+let n=7;if(posto()){H(n+++'. Areas classificadas');TB(['Elemento','Dist. (m)','Min. (m)','Situacao'],R.z.map(x=>[x.n,f(x.d,1),f(x.m,1),{ok:'Atende',wa:'Folga reduzida',er:'NAO ATENDE - PENDENTE'}[x.s]]),[70,25,25,60])}
+const m=medi(R);H(n+++'. Medicao');TB(['Item','Definicao'],[['Tipo',m.ind?`Indireta: 3 TC ${m.tc}/5 A, classe ${S.md.cl} (Ib ${f(R.Ib,0)} A > ${S.md.dir} A)`:`Direta (Ib ${f(R.Ib,0)} A <= ${S.md.dir} A)`],['Medidor','Eletronico 3 elementos, 4 fios, kWh/kvarh'],['Altura (m)',S.md.alt],['Local',S.md.loc]],[50,130]);
+if(S.mp.pts.length){H(n+++'. Localizacao');P('Logradouro: '+(S.mp.rua||S.g.end||'-'));TB(['#','Ponto','Do anterior (m)','Acumulada (m)'],mrows().map(x=>[x[0],x[1],f(x[2],1),f(x[3],1)]),[15,85,40,40])}H(n+'. Responsabilidade tecnica');P('Calculos gerados por ferramenta de apoio; a validacao das tabelas normativas e a responsabilidade pelo projeto sao do profissional habilitado (ART/RRT no ______).');y+=14;nf(12);d.line(M,y,M+80,y);y+=5;P('Responsavel tecnico - CREA/CFT ______');
+DRW(uni(R),'Diagrama unifilar');DRW(pla(R),'Planta de implantacao');DRW(ter(R),'Esquema de aterramento');DRW(med(R),'Caixa de medicao');if(S.mp.pts.length>1)DRW(loc(),'Localizacao e distancias');
+d.addPage();y=M;H('Lista de materiais');TB(['Item','Especificacao','Qtd','Un','Codigo'],mat(R).map(x=>x.map(String)),[50,60,15,10,45]);
+const pg=d.getNumberOfPages();for(let k=1;k<=pg;k++){d.setPage(k);d.setFont('helvetica','normal').setFontSize(8).setTextColor(120);d.text(pz(`${g.nome||'Projeto eletrico'} - pagina ${k}/${pg}`),M,293);d.setTextColor(0)}
+const fn='projeto-'+(g.nome||'eletrico').replace(/[^\w]+/g,'-')+'.pdf';try{saveFile(fn,d.output('blob'))}catch(_){}
+try{const u=d.output('bloburl');tz('PDF gerado ('+pg+' paginas). <a href="'+u+'" target="_blank">Abrir</a>')}catch(_){tz('PDF gerado.')}};
+const au=async(p,b)=>{const r=await fetch(CFG.url.replace(/\/$/,'')+'/auth/v1/'+p,{method:'POST',headers:{apikey:CFG.key,'Content-Type':'application/json'},body:JSON.stringify(b)}),j=await r.json();if(!r.ok)throw new Error(j.msg||j.error_description||j.message||r.status);return j};
+const cs=()=>{try{localStorage.pcfg=JSON.stringify({...CFG,pw:''})}catch(_){}},tk=j=>{if(!j.access_token)return 0;CFG.tok=j.access_token;CFG.rt=j.refresh_token;CFG.exp=Date.now()+(j.expires_in||3600)*1000;CFG.pw='';cs();return 1};
+async function ens(){if(CFG.rt&&CFG.exp&&Date.now()>CFG.exp-60000){try{tk(await au('token?grant_type=refresh_token',{refresh_token:CFG.rt}))}catch(_){CFG.tok='';CFG.rt='';cs()}}}
+const need=()=>!CFG.url||!CFG.key||!CFG.em||!CFG.pw;
+PA.li=async()=>{if(need())return say('Informe URL, chave, e-mail e senha.');try{tk(await au('token?grant_type=password',{email:CFG.em,password:CFG.pw}));say('Login realizado.')}catch(e){say('Falha no login: '+e.message)}};
+PA.su=async()=>{if(need())return say('Informe URL, chave, e-mail e senha.');try{say(tk(await au('signup',{email:CFG.em,password:CFG.pw}))?'Conta criada e conectada.':'Conta criada. Confirme o e-mail (se exigido) e clique em Entrar.')}catch(e){say('Falha ao criar conta: '+e.message)}};
+PA.lg=()=>{CFG.tok='';CFG.rt='';CFG.exp=0;cs();say('Desconectado.')};
+['sr','lr','ro'].forEach(k=>{const o=PA[k];PA[k]=async d=>{await ens();return o(d)}});
+const MX=(lo,z)=>(lo+180)/360*2**z*256,MY=(la,z)=>{const s=Math.sin(la*Math.PI/180);return(.5-Math.log((1+s)/(1-s))/(4*Math.PI))*2**z*256},IX=(x,z)=>x/(2**z*256)*360-180,IY=(y,z)=>{const n=Math.PI-2*Math.PI*y/(2**z*256);return 180/Math.PI*Math.atan(Math.sinh(n))};
+const hv=(a,b)=>{const r=Math.PI/180,x=Math.sin((b.lat-a.lat)*r/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin((b.lon-a.lon)*r/2)**2;return 12742000*Math.asin(Math.sqrt(x))};
+const TK={'Poste Equatorial (conexão)':'mt','Poste particular':'mt','Transformador':'eq','Medição':'tk','Posto/edificação':'te','Outro':'bt'},TKL=Object.keys(TK);
+const mrows=()=>{let ac=0;return S.mp.pts.map((p,k)=>{const dd=k?hv(S.mp.pts[k-1],p):0;ac+=dd;return[k+1,p.tipo,dd,ac,p]})};
+const LOCT=()=>{const r=mrows();return r.length?`<h4>Localização e distâncias</h4><p>Logradouro: ${esc(S.mp.rua||S.g.end)}</p>${tb(['#','Ponto','Do anterior (m)','Acumulada (m)'],r.map(x=>[x[0],esc(x[1]),f(x[2],1),f(x[3],1)]))}`:''};
+function loc(){const D=mk(),{T,L,C}=D,pts=S.mp.pts,W=360,H=340;D.k('te');T(10,16,'Rua: '+(S.mp.rua||'(informar)'),12);
+if(!pts.length){T(10,40,'Sem pontos marcados',11);return{P:D.P,w:W,h:H}}
+const la=pts[0].lat,lo=pts[0].lon,Q=pts.map(p=>[(p.lon-lo)*Math.cos(la*Math.PI/180)*111320,-(p.lat-la)*110540]),x0=Math.min(...Q.map(a=>a[0])),y0=Math.min(...Q.map(a=>a[1])),dx=Math.max(...Q.map(a=>a[0]))-x0,dy=Math.max(...Q.map(a=>a[1]))-y0,s=Math.min(200/(dx||1),230/(dy||1),50),X=a=>40+(a[0]-x0)*s,Y=a=>50+(a[1]-y0)*s;
+D.k('mt');for(let k=1;k<Q.length;k++){L(X(Q[k-1]),Y(Q[k-1]),X(Q[k]),Y(Q[k]));T((X(Q[k-1])+X(Q[k]))/2+4,(Y(Q[k-1])+Y(Q[k]))/2-4,f(hv(pts[k-1],pts[k]),1)+' m',10)}
+pts.forEach((p,k)=>{D.k(TK[p.tipo]||'bt');C(X(Q[k]),Y(Q[k]),5);T(X(Q[k])+8,Y(Q[k])-6,(k+1)+'. '+p.tipo.split(' (')[0],10)});
+const b=[1,2,5,10,20,50,100,200,500,1000,2000].filter(v=>v*s<=100).pop()||1;D.k('te');L(40,H-20,40+b*s,H-20);T(40,H-26,b+' m',9);L(W-20,40,W-20,20);T(W-24,16,'N',10);return{P:D.P,w:W,h:H}}
+const MV0=()=>`<div class="c"><h3>Mapa e localização do transformador</h3><p class="m">Toque no mapa para adicionar pontos (poste da rede, poste particular, transformador…). A distância de cada ponto ao anterior é marcada na linha.</p><div class="g">${sl('mp.tipo','Tipo do próximo ponto',TKL)}${i('mp.rua','Rua / logradouro')}${i('mp.c.0','Latitude do centro','number')}${i('mp.c.1','Longitude do centro','number')}</div><p><button data-a="mz" data-k="1">＋</button> <button data-a="mz" data-k="-1">－</button> <button data-a="mv" data-k="N">↑</button> <button data-a="mv" data-k="S">↓</button> <button data-a="mv" data-k="W">←</button> <button data-a="mv" data-k="E">→</button> <button data-a="ml">📍 Minha localização</button> <button data-a="mg">Centralizar no cliente</button> <button data-a="mt">Base do mapa</button> <button data-a="mu">Usar no ramal MT</button> <button data-a="mc">Limpar</button></p></div><div id="res"></div>`;
+const MV1=()=>{const m=S.mp,z=m.z,cx=MX(m.c[1],z),cy=MY(m.c[0],z),P=p=>[MX(p.lon,z)-cx+180,MY(p.lat,z)-cy+180],rows=mrows(),H=(x,y,s,fs=10,c='#000')=>`<text x="${x}" y="${y}" font-size="${fs}" fill="${c}" style="paint-order:stroke;stroke:#fff;stroke-width:3px;font-family:sans-serif">${esc(s)}</text>`;let t='<defs><pattern id="gp" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#bcd0ea" stroke-width="1"/></pattern></defs><rect width="360" height="360" fill="#dcebf9"/><rect width="360" height="360" fill="url(#gp)"/>';
+if(m.tiles){const n=2**z;for(let tx=Math.floor((cx-180)/256);tx<=Math.floor((cx+180)/256);tx++)for(let ty=Math.floor((cy-180)/256);ty<=Math.floor((cy+180)/256);ty++)if(ty>=0&&ty<n)t+=`<image href="https://tile.openstreetmap.org/${z}/${((tx%n)+n)%n}/${ty}.png" x="${tx*256-cx+180}" y="${ty*256-cy+180}" width="256" height="256"/>`}
+rows.forEach(([k,tp,dd,ac,p],i)=>{if(!i)return;const[x,y]=P(p),[u,v]=P(m.pts[i-1]);t+=`<line x1="${u}" y1="${v}" x2="${x}" y2="${y}" stroke="${PAL[TK[tp]]||'#e03131'}" stroke-width="3" stroke-dasharray="6 3"/>`+`<rect x="${(u+x)/2-2}" y="${(v+y)/2-16}" width="${f(dd,1).length*6+22}" height="16" rx="8" fill="${PAL[TK[tp]]||'#e03131'}"/>`+`<text x="${(u+x)/2+4}" y="${(v+y)/2-4}" font-size="11" fill="#fff" style="font-family:sans-serif">${f(dd,1)} m</text>`});
+rows.forEach(([k,tp,dd,ac,p])=>{const[x,y]=P(p);t+=`<circle cx="${x}" cy="${y}" r="7" fill="${PAL[TK[tp]]||'#000'}" stroke="#fff" stroke-width="2"/>`+H(x+9,y+4,k+'. '+tp.split(' (')[0])});
+const mpp=156543.03*Math.cos(m.c[0]*Math.PI/180)/2**z,bar=[1,2,5,10,20,50,100,200,500,1000].find(v=>v/mpp>=60)||1000;
+t+=`<rect x="10" y="340" width="${bar/mpp}" height="4" fill="#000"/>`+H(10,334,bar+' m')+H(10,16,m.rua?'Rua: '+m.rua:'Toque no mapa para marcar pontos',12,'#1b1f24')+H(250,352,'© OpenStreetMap',9,'#555');
+return `<div class="c"><svg id="mp" viewBox="0 0 360 360" style="width:100%;max-width:560px;border:1px solid var(--bd);background:#e9edf2;cursor:crosshair;touch-action:manipulation">${t}</svg><div class="lg">${TKL.map(k=>`<span><i style="background:${PAL[TK[k]]}"></i>${k.split(' (')[0]}</span>`).join('')}</div><p class="m">As ruas (base OpenStreetMap) carregam com internet fora da página publicada; aqui o mapa mostra só os pontos e as distâncias.</p></div>`+(rows.length?`<div class="c">${tb(['#','Ponto','Do anterior','Acumulada',''],rows.map(x=>[x[0],esc(x[1]),f(x[2],1)+' m',f(x[3],1)+' m',`<button data-a="pd" data-k="${x[0]-1}">✕</button>`]))}</div>`:'')};
+async function rev(p){try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&accept-language=pt-BR&lat=${p.lat}&lon=${p.lon}`),a=(await r.json()).address||{},ru=a.road||a.pedestrian||'';if(ru&&!S.mp.rua)S.mp.rua=ru;if(ru&&!S.g.end)S.g.end=ru;if(!S.g.bairro)S.g.bairro=a.suburb||a.neighbourhood||'';if(!S.g.mun)S.g.mun=a.city||a.town||a.village||'';if(!S.g.cep)S.g.cep=a.postcode||'';save();render()}catch(_){}}
+const MAPCLK=(ev,sv)=>{const m=S.mp,r=sv.getBoundingClientRect(),z=m.z,x=(ev.clientX-r.left)/r.width*360,y=(ev.clientY-r.top)/r.height*360,p={tipo:m.tipo,lat:+IY(y-180+MY(m.c[0],z),z).toFixed(6),lon:+IX(x-180+MX(m.c[1],z),z).toFixed(6)};m.pts.push(p);if(p.tipo=='Transformador'&&S.g.lat===''){S.g.lat=p.lat;S.g.lon=p.lon}save();upd();if(m.pts.length==1)rev(p)};
+Object.assign(PA,{mz(d){const m=S.mp;m.z=Math.max(3,Math.min(19,m.z+ +d.k));save();upd()},
+mv(d){const m=S.mp,z=m.z,cx=MX(m.c[1],z),cy=MY(m.c[0],z),o={N:[0,-90],S:[0,90],W:[-90,0],E:[90,0]}[d.k];m.c=[IY(cy+o[1],z),IX(cx+o[0],z)];save();render()},
+ml(){navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>{S.mp.c=[p.coords.latitude,p.coords.longitude];S.mp.z=18;if(S.g.lat===''){S.g.lat=p.coords.latitude.toFixed(6);S.g.lon=p.coords.longitude.toFixed(6)}save();render()},e=>tz('Localização indisponível: '+e.message)):tz('Sem geolocalização neste navegador.')},
+mg(){const a=N(S.g.lat),b=N(S.g.lon);if(!a||!b)return tz('Informe latitude e longitude na etapa Dados.');S.mp.c=[a,b];S.mp.z=18;save();render()},
+mt(){S.mp.tiles=S.mp.tiles?0:1;save();upd()},
+mu(){const P=S.mp.pts,a=P.findIndex(p=>p.tipo.startsWith('Poste Equatorial')),b=P.findIndex(p=>p.tipo=='Transformador');if(a<0||b<0)return tz('Marque um Poste Equatorial e o Transformador.');let s=0;for(let k=Math.min(a,b)+1;k<=Math.max(a,b);k++)s+=hv(P[k-1],P[k]);S.c.lm=Math.round(s);save();tz('Ramal MT = '+f(s,1)+' m aplicado ao cálculo.')},
+mc(){S.mp.pts=[];save();upd()},pd(d){S.mp.pts.splice(+d.k,1);save();upd()}});
+const F=p=>p.split('.').reduce((o,k)=>o[k],S),set=(p,v)=>{const k=p.split('.'),l=k.pop();k.reduce((o,x)=>o[x],S)[l]=v};
+const i=(p,l,t='text')=>`<label>${l}<input data-p="${p}" type="${t}" ${t=='number'?'step="any" inputmode="decimal"':''} value="${esc(F(p))}"></label>`;
+const n2=p=>`<input class="n" type="number" step="any" data-p="${p}" value="${esc(F(p))}">`;
+const sl=(p,l,o)=>`<label>${l}<select data-p="${p}">${o.map(x=>`<option${x==F(p)?' selected':''}>${x}</option>`).join('')}</select></label>`;
+const B=s=>`<span class="b ${s}">${{ok:'OK',wa:'ATENÇÃO',er:'VIOLAÇÃO'}[s]}</span>`;
+const posto=()=>S.g.tipo.startsWith('Posto');
+const tb=(h,r)=>`<div class="sc"><table><tr>${h.map(x=>`<th>${x}`).join('')}</tr>${r.map(x=>`<tr>${x.map(y=>`<td>${y}`).join('')}</tr>`).join('')}</table></div>`;
+
+function calc(){const g=S.g,t=S.t,c=S.c,R={};let Pi=0,Dw=0,Dk=0;
+S.cg.forEach(x=>{const w=N(x.q)*N(x.p),fp=N(x.fp)||1;Pi+=w;Dw+=w*N(x.fd);Dk+=w*N(x.fd)/fp});
+Object.assign(R,{Pi,Dw,Dk,Sr:Dk*(1+N(t.mg)/100)});
+R.big=R.Sr>TR[TR.length-1];R.tr=TR.find(x=>x>=R.Sr)||TR[TR.length-1];
+const Vs=N(g.vs)||380,Vp=N(g.vp)||13.8,cs=N(c.cos)||.92,sn=Math.sqrt(1-cs*cs);
+R.Is=R.tr*1000/(1.732*Vs);R.Ip=R.tr/(1.732*Vp);R.Ib=R.Sr*1000/(1.732*Vs);
+R.Scc=1.732*Vp*N(t.icc);R.Zr=R.Scc?R.tr/1000/R.Scc*100:0;R.Zt=N(t.z)+R.Zr;R.Iccs=R.Is/(R.Zt/100)/1000;R.Iccp=N(t.icc);
+R.tc=c.tr.map(x=>{const I=R.Ib*N(x.pc)/100;for(let np=1;np<=4;np++)for(const[s,a,r]of CAB){if(a*N(c.k)*np<I)continue;const dv=1.732*(I/np)*N(x.l)/1000*(r*cs+.1*sn)/Vs*100;if(dv<=N(x.lim))return{n:x.n,l:N(x.l),s,np,dv,I,lim:N(x.lim)}}return{n:x.n,l:N(x.l),s:240,np:4,dv:NaN,I,bad:1,lim:N(x.lim)}});
+R.dvT=R.tc.reduce((a,x)=>a+(x.dv||0),0);
+const sm=R.Iccp*1000*Math.sqrt(N(c.t))/143;R.smin=sm;R.mt=MTS.find(s=>s>=sm)||240;
+const rm=CAB.find(x=>x[0]==Math.min(R.mt,240))[2];R.dvM=1.732*R.Ip*N(c.lm)/1000*(rm*cs+.1*sn)/(Vp*1000)*100;
+R.elo=ELO.find(x=>x>=2*R.Ip)||100;R.dj=DJ.find(x=>x>=R.Ib)||2000;R.djOk=R.Iccs<=65;
+const L=N(c.hn)||2.4,d=.0159,rho=N(c.rho);R.R1=rho/(2*Math.PI*L)*Math.log(4*L/d);
+R.nh=40;R.Rn=R.R1/(40*.85);for(let n=1;n<=40;n++){const r=n==1?R.R1:R.R1/(n*.85);if(r<=N(c.lr)){R.nh=n;R.Rn=r;break}}
+const a=S.a;R.z=ZN.slice(1).map(([k,n])=>{const d=Math.hypot(N(a.e.T[0])-N(a.e[k][0]),N(a.e.T[1])-N(a.e[k][1])),m=N(a.m[k]);return{n,d,m,s:d<m?'er':d<m*1.1?'wa':'ok'}});
+R.viol=posto()&&R.z.some(x=>x.s=='er');return R}
+
+const RS=[
+()=>{const g=S.g,cep=String(g.cep).replace(/\D/g,''),la=N(g.lat),lo=N(g.lon);
+const a=cep.length==8?(cep.startsWith('64')?'ok':'er'):'wa',b=g.lat===''||g.lon===''?'wa':(la<-2.7&&la>-10.95&&lo<-40.3&&lo>-46)?'ok':'er';
+return `<div class="c"><h3>Triagem de viabilidade</h3><p>${B(a)} CEP na faixa do Piauí (64xxx-xxx)</p><p>${B(b)} Coordenadas dentro do estado do Piauí</p><p class="m">Triagem preliminar: a viabilidade e o ponto de conexão são definidos pela Equatorial.</p></div>`},
+()=>{const R=calc();return `<div class="c"><h3>Totais</h3>${tb(['Grandeza','Valor'],[['Potência instalada',f(R.Pi)+' kW'],['Demanda (kW)',f(R.Dw)+' kW'],['Demanda (kVA)',f(R.Dk)+' kVA']])}</div>`},
+()=>{const R=calc();return `<div class="c"><h3>Resultado</h3>${tb(['Item','Valor'],[['Demanda c/ margem',f(R.Sr)+' kVA'],['Trafo comercial',`<b>${R.tr} kVA</b>${R.big?' '+B('er')+' acima do maior padrão':''}`],['I nominal secundário',f(R.Is,1)+' A'],['I nominal primário',f(R.Ip,2)+' A'],['Z% total (trafo + rede)',f(R.Zt)+' %'],['Icc secundário',f(R.Iccs,2)+' kA'],['Icc primário (dado da rede)',f(R.Iccp,2)+' kA']])}</div>`},
+()=>{if(!posto())return '';const R=calc();return `<div class="c ${R.viol?'al':''}"><h3>Verificação de distâncias ${R.viol?B('er'):B('ok')}</h3>${tb(['Elemento','Dist.','Mín.',''],R.z.map(x=>[x.n,f(x.d,1)+' m',f(x.m,1)+' m',B(x.s)]))}${R.viol?'<p>Posição do trafo/medição viola restrição de atmosfera explosiva: reposicione antes de emitir o projeto.</p>':''}</div>`},
+()=>{const R=calc();return `<div class="c"><h3>Condutores BT e queda de tensão</h3>${tb(['Trecho','I (A)','Cabo','ΔV','Lim.'],R.tc.map(x=>[x.n,f(x.I,1),`${x.np>1?x.np+'× ':''}3#${x.s} mm²`,x.bad?'—':f(x.dv)+' %',x.bad?B('er'):B(x.dv<=x.lim?'ok':'er')]))}<p>ΔV total BT: <b>${f(R.dvT)} %</b> ${B(R.dvT<=4?'ok':'er')} (máx. 4 %)</p></div><div class="c"><h3>Média tensão e proteções</h3>${tb(['Item','Resultado'],[['Cabo MT (térmico, Icc·√t/143)',`${R.mt} mm² Cu/XLPE (mín. calculado ${f(R.smin,1)} mm²)`],['ΔV ramal MT',f(R.dvM,3)+' %'],['Elo fusível (≥2·Ip)',R.elo+'K'],['Disjuntor geral BT',R.dj+' A, PdI ≥ '+f(R.Iccs,1)+' kA'],['Icc secundário',f(R.Iccs,2)+' kA'],['Icc primário',f(R.Iccp,2)+' kA']])}</div><div class="c"><h3>Aterramento</h3>${tb(['Item','Resultado'],[['R 1 haste',f(R.R1)+' Ω'],['Hastes necessárias',`<b>${R.nh}</b> × ${S.c.hn} m`],['R resultante',f(R.Rn)+' Ω '+B(R.Rn<=N(S.c.lr)?'ok':'er')],['Limite adotado',f(S.c.lr)+' Ω']])}</div>${WRES()}${MRES(R)}`},
+()=>{const R=calc(),o=OUT(R);return `${R.viol?'<div class="c al"><b>Projeto com pendências:</b> há violação de distância de área classificada (etapa 4). O memorial registra a pendência.</div>':''}<div class="c np"><button data-a="dl">⬇ Baixar</button> <button data-a="cp">Copiar</button> <button class="pr" data-a="pdf">📄 PDF completo</button> <button class="pr" onclick="print()">🖨 Imprimir / PDF</button></div><div class="c">${o.h}</div>`}];
+
+const V=[
+()=>`<div class="c"><h3>Cliente e local</h3><div class="g">${i('g.nome','Cliente / Razão social')}${i('g.doc','CNPJ / CPF')}${i('g.ie','Inscrição estadual')}${i('g.end','Logradouro')}${i('g.bairro','Bairro')}${i('g.cep','CEP')}${i('g.mun','Município')}${i('g.lat','Latitude','number')}${i('g.lon','Longitude','number')}${sl('g.tipo','Empreendimento',['Posto de Combustíveis','Outros'])}${i('g.vp','Tensão primária (kV)','number')}${i('g.vs','Tensão secundária (V)','number')}</div></div><div id="res"></div>`,
+()=>`<div class="c"><h3>Relação de cargas BT</h3><div class="sc"><table><tr><th>Descrição<th>Categoria<th>Qtd<th>kW un.<th>FP<th>FD<th></tr>${S.cg.map((x,k)=>`<tr><td><input data-p="cg.${k}.d" value="${esc(x.d)}"><td><select data-p="cg.${k}.c">${Object.keys(FDc).map(o=>`<option${o==x.c?' selected':''}>${o}</option>`).join('')}</select>${['q','p','fp','fd'].map(n=>`<td>${n2(`cg.${k}.${n}`)}`).join('')}<td><button data-a="del" data-k="${k}">✕</button>`).join('')}</table></div><button data-a="add">+ Carga</button><p class="m">FD por categoria é referência editável: confirmar na NDU da Equatorial.</p></div><div id="res"></div>`,
+()=>`<div class="c"><h3>Transformador e subestação</h3><div class="g">${i('t.mg','Margem de crescimento (%)','number')}${sl('t.sub','Tipo de subestação',['Abrigada','Aérea em poste particular','Ao tempo simplificada'])}${i('t.z','Z% do trafo','number')}${i('t.icc','Icc da rede no ponto (kA)','number')}</div><p class="m">Icc da rede: informar o valor da carta de viabilidade da Equatorial.</p></div><div id="res"></div>`,
+()=>posto()?`<div class="c"><h3>Implantação e áreas classificadas (m)</h3><div class="g">${i('a.W','Largura do lote','number')}${i('a.H','Profundidade do lote','number')}</div><div class="sc"><table><tr><th>Elemento<th>X<th>Y<th>Mín.</tr>${ZN.map(([k,n])=>`<tr><td>${n}<td>${n2(`a.e.${k}.0`)}<td>${n2(`a.e.${k}.1`)}<td>${k=='T'?'—':n2('a.m.'+k)}`).join('')}</table></div><p class="m">Distâncias mínimas são valores de referência editáveis: conferir na NBR 14639 e na NDU vigente.</p></div><div id="res"></div>`:'<div class="c">Verificação de áreas classificadas aplica-se a Posto de Combustíveis.</div>',
+()=>`<div class="c"><h3>Parâmetros de cálculo</h3><div class="g">${i('c.k','Fator de correção (agrup./temp./método)','number')}${i('c.cos','cos φ','number')}${i('c.lm','Ramal MT (m)','number')}${i('c.t','Tempo de falta (s)','number')}${i('c.rho','ρ do solo (Ω·m)','number')}${i('c.lr','Limite de aterramento (Ω)','number')}${i('c.hn','Comprimento da haste (m)','number')}</div><h4>Trechos BT</h4><div class="sc"><table><tr><th>Trecho<th>L (m)<th>% I<th>ΔV máx %</tr>${S.c.tr.map((x,k)=>`<tr><td>${esc(x.n)}<td>${n2(`c.tr.${k}.l`)}<td>${n2(`c.tr.${k}.pc`)}<td>${n2(`c.tr.${k}.lim`)}`).join('')}</table></div></div>${WEN()}${MED()}<div id="res"></div>`,
+()=>`<div class="c np">${[['mem','Memorial'],['all','▶ Projeto'],['uni','Unifilar'],['loc','Localização'],['med','Medição'],['pla','Planta'],['ter','Aterramento'],['mat','Materiais'],['wen','Ficha Wenner'],['prj','Projetos'],['dxf','DXF'],['json','JSON']].map(([k,n])=>`<button class="${out==k?'on':''}" data-o="${k}">${n}</button>`).join(' ')}</div><div id="res"></div>`];
+const ST=['Dados','Cargas','Trafo','Áreas','Cálculos','Saídas','Mapa'];V.push(MV0);RS.push(MV1);let st=0,out='mem',an=1;
+
+const PAL={mt:'#e03131',bt:'#1c7ed6',te:'#2f9e44',eq:'#ae3ec9',tk:'#f08c00'},ACI={mt:1,bt:5,te:3,eq:6,tk:2};
+const LG=`<div class="lg"><span><i style="background:#e03131"></i>Média tensão</span><span><i style="background:#1c7ed6"></i>Baixa tensão</span><span><i style="background:#ae3ec9"></i>Equipamentos</span><span><i style="background:#2f9e44"></i>Aterramento</span><span><i style="background:#f08c00"></i>Tanques/pista</span><span><i style="background:#c62828;opacity:.5"></i>Zona de restrição</span><button class="np" data-a="an">▶ Reanimar</button></div>`;
+function mk(){const P=[];let K='';const D={P,k:c=>{K=c},T:(x,y,s,h=11)=>P.push({t:'T',x,y,s,h,k:K}),L:(a,b,c,d)=>P.push({t:'L',a,b,c,d,k:K}),C:(x,y,r,z)=>P.push({t:'C',x,y,r,z,k:K}),X:(x,y,w,h)=>{D.L(x,y,x+w,y);D.L(x+w,y,x+w,y+h);D.L(x+w,y+h,x,y+h);D.L(x,y+h,x,y)}};return D}
+function svg(P,w,h,A,off=0){const x=P.map((p,k)=>{const c=PAL[p.k]||'currentColor',s=A?` style="animation-delay:${(off+k*.05).toFixed(2)}s"`:'',q=A?' pathLength="1"':'';
+return p.t=='L'?`<line x1="${p.a}" y1="${p.b}" x2="${p.c}" y2="${p.d}" stroke="${c}"${q}${s}/>`:p.t=='C'?(p.z?`<circle class="z" cx="${p.x}" cy="${p.y}" r="${p.r}" stroke="#c62828" stroke-dasharray="4"${s}/>`:`<circle cx="${p.x}" cy="${p.y}" r="${p.r}" stroke="${c}"${q}${s}/>`):`<text x="${p.x}" y="${p.y}" font-size="${p.h}" fill="${c}" stroke="none"${s}>${esc(p.s)}</text>`}).join('');
+return `<svg xmlns="http://www.w3.org/2000/svg"${A?' class="an"':''} viewBox="0 0 ${w} ${h}" style="width:100%;max-width:${w*1.5}px;color:var(--fg,#000)" fill="none" stroke-width="1.2" font-family="sans-serif">${x}</svg>`}
+function svgOld(P,w,h){const x=P.map(p=>p.t=='L'?`<line x1="${p.a}" y1="${p.b}" x2="${p.c}" y2="${p.d}"/>`:p.t=='C'?`<circle cx="${p.x}" cy="${p.y}" r="${p.r}"${p.z?' stroke="#c62828" stroke-dasharray="4"':''}/>`:`<text x="${p.x}" y="${p.y}" font-size="${p.h}" fill="currentColor" stroke="none">${esc(p.s)}</text>`).join('');
+return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" style="width:100%;max-width:${w*1.5}px;color:var(--fg,#000)" fill="none" stroke="currentColor" stroke-width="1.2" font-family="sans-serif">${x}</svg>`}
+function mkOld(){const P=[];return{P,T:(x,y,s,h=11)=>P.push({t:'T',x,y,s,h}),L:(a,b,c,d)=>P.push({t:'L',a,b,c,d}),C:(x,y,r,z)=>P.push({t:'C',x,y,r,z}),X(x,y,w,h){this.L(x,y,x+w,y);this.L(x+w,y,x+w,y+h);this.L(x+w,y+h,x,y+h);this.L(x,y+h,x,y)}}}
+function uni(R){const D=mk(),{T,L,C,X}=D,cx=150,g=S.g;
+D.k('mt');T(40,18,`REDE EQUATORIAL ${g.vp} kV 3F`,12);L(cx,24,cx,60);
+D.k('eq');X(cx-15,60,30,24);T(cx-8,76,'PR');T(cx+25,72,'Para-raios 12 kV/10 kA');D.k('mt');L(cx,84,cx,110);
+D.k('eq');X(cx-15,110,30,24);T(cx-8,126,'CF');T(cx+25,122,`Chave fusível + elo ${R.elo}K`);D.k('mt');L(cx,134,cx,180);T(cx+8,160,`Cabo MT ${R.mt} mm² Cu/XLPE`);
+D.k('eq');C(cx-10,200,20);C(cx+10,200,20);T(cx+38,196,`Trafo ${R.tr} kVA`);T(cx+38,210,`${g.vp}kV/${g.vs}V Z=${f(S.t.z,1)}%`);D.k('bt');L(cx,220,cx,250);
+D.k('eq');X(cx-20,250,40,28);T(cx-14,268,'kWh');T(cx+30,268,'Medição Equatorial');D.k('bt');L(cx,278,cx,310);
+D.k('eq');X(cx-15,310,30,24);T(cx-8,326,'DJ');T(cx+25,326,`Disj. geral ${R.dj} A (${f(R.Iccs,1)} kA)`);D.k('bt');L(cx,334,cx,360);
+L(cx-90,360,cx+90,360);T(cx-90,352,'QGBT');
+R.tc.forEach((x,k)=>{const px=cx-70+k*70;L(px,360,px,400);T(px-32,414,x.n.split(' ')[0],9);T(px-32,426,`${x.np>1?x.np+'x':''}3#${x.s}mm²`,9)});
+D.k('te');L(cx-90,360,cx-110,360);L(cx-110,360,cx-110,450);L(cx-125,450,cx-95,450);L(cx-120,456,cx-100,456);L(cx-115,462,cx-105,462);T(4,484,`Terra: ${R.nh} haste(s), ${f(R.Rn,1)} ohm`,9);
+return{P:D.P,w:360,h:500}}
+function pla(R){const D=mk(),{T,L,C,X}=D,s=10,o=20,a=S.a,pt=k=>[o+N(a.e[k][0])*s,o+N(a.e[k][1])*s],nm={K:'Tanque',R:'Respiro',B:'Boca desc.',P:'Pista/bombas',T:'TR+Medição'};
+X(o,o,N(a.W)*s,N(a.H)*s);T(o,12,`Lote ${a.W} x ${a.H} m (1 m = ${s} px)`,10);
+if(posto())['K','R','B','P'].forEach(k=>{const[x,y]=pt(k);C(x,y,N(a.m[k])*s,1)});
+['K','R','B','P','T'].forEach(k=>{const[x,y]=pt(k),h=k=='T'?7:4;D.k(k=='T'?'eq':'tk');X(x-h,y-h,2*h,2*h);T(x+h+3,y+4,nm[k],10)});
+if(posto()){const[x,y]=pt('T'),[u,v]=pt('P');D.k('bt');L(x,y,x,v);L(x,v,u,v);T(x+4,(y+v)/2,'eletroduto BT',9)}
+return{P:D.P,w:N(a.W)*s+60,h:N(a.H)*s+40}}
+function ter(R){const D=mk(),{T,L,C,X}=D,n=R.nh;D.k('eq');X(20,20,36,36);T(26,42,'CI');D.k('te');L(56,38,100+(n-1)*40,38);
+for(let k=0;k<n;k++){const x=100+k*40;L(x,38,x,110);C(x,38,3)}
+T(20,132,`${n} haste(s) cobreada(s) 5/8" x ${S.c.hn} m, espaçadas ≥ ${S.c.hn} m`,10);T(20,148,'Cabo Cu nu 35 mm², conexões exotérmicas',10);T(20,164,`R = ${f(R.Rn)} Ω ≤ ${f(S.c.lr,1)} Ω (ρ = ${S.c.rho} Ω·m)`,10);
+return{P:D.P,w:Math.max(n*40+120,360),h:180}}
+function dxf(R){let s='0\nSECTION\n2\nENTITIES\n',ox=0;[uni(R),pla(R),ter(R),med(R),loc()].forEach(d=>{d.P.forEach(p=>{if(p.t=='L')s+=`0\nLINE\n8\n0\n62\n${ACI[p.k]||7}\n10\n${p.a+ox}\n20\n${-p.b}\n30\n0\n11\n${p.c+ox}\n21\n${-p.d}\n31\n0\n`;else if(p.t=='C')s+=`0\nCIRCLE\n8\n${p.z?1:0}\n62\n${p.z?1:ACI[p.k]||7}\n10\n${p.x+ox}\n20\n${-p.y}\n30\n0\n40\n${p.r}\n`;else s+=`0\nTEXT\n8\n0\n62\n${ACI[p.k]||7}\n10\n${p.x+ox}\n20\n${-p.y}\n30\n0\n40\n${p.h*.8}\n1\n${asc(p.s)}\n`});ox+=d.w+60});return s+'0\nENDSEC\n0\nEOF\n'}
+function mat(R){const c=S.c,M=[['Transformador trifásico a óleo',`${R.tr} kVA, ${S.g.vp} kV / ${S.g.vs} V`,1,'un'],['Chave fusível MT + elo',`15 kV, elo ${R.elo}K`,3,'un'],['Para-raios polimérico','12 kV, 10 kA',3,'un'],['Cabo MT Cu/XLPE',`${R.mt} mm², 8,7/15 kV`,3*N(c.lm),'m'],['Disjuntor geral BT',`${R.dj} A, PdI ≥ ${f(R.Iccs,1)} kA`,1,'un']];
+R.tc.forEach(x=>M.push([`Cabo BT: ${x.n}`,`${x.s} mm² Cu 0,6/1 kV (3F+N)`,Math.ceil(4*x.np*x.l),'m']));
+M.push(['Haste de aterramento cobreada',`5/8" x ${c.hn} m`,R.nh,'un'],['Cabo Cu nu',`35 mm²`,Math.ceil((R.nh-1)*N(c.hn)+10),'m'],['Caixa de inspeção de aterramento','Ø300 mm',1,'un'],['Solda exotérmica / conector','p/ haste e cabo',R.nh,'un'],['Caixa de medição Equatorial',medi(R).ind?`indireta: 3 TC ${medi(R).tc}/5 A + medidor`:'direta + medidor',1,'cj']);if(medi(R).ind)M.push(['Transformador de corrente',`cl. ${S.md.cl}, ${medi(R).tc}/5 A`,3,'un']);
+return M.map(x=>[...x,'preencher cód. Equatorial'])}
+function mem(R){const g=S.g,c=S.c,t=S.t;return `<div class="doc"><h2>MEMORIAL DESCRITIVO E DE CÁLCULO</h2><p><b>Projeto elétrico — ${esc(g.tipo)}</b><br>${esc(g.nome)} · ${esc(g.doc)} · IE ${esc(g.ie)}<br>${esc(g.end)}, ${esc(g.bairro)}, ${esc(g.mun)}/PI · CEP ${esc(g.cep)} · Coord. ${esc(g.lat)}, ${esc(g.lon)}</p>
+<h4>1. Objeto e normas</h4><p>Entrada de energia em ${g.vp} kV com subestação ${t.sub.toLowerCase()} de ${R.tr} kVA. Atende ABNT NBR 5410, NBR 14039, NBR 14639 e NDUs da Equatorial Piauí vigentes.</p>
+<h4>2. Cargas</h4>${tb(['Descrição','Qtd','kW','FP','FD'],S.cg.map(x=>[esc(x.d),x.q,x.p,x.fp,x.fd]))}<p>Instalada ${f(R.Pi)} kW · Demanda ${f(R.Dw)} kW / ${f(R.Dk)} kVA · com margem de ${t.mg}%: ${f(R.Sr)} kVA.</p>
+<h4>3. Transformador</h4><p>${R.tr} kVA, Z = ${f(t.z,1)} %. In(BT) = ${f(R.Is,1)} A; In(MT) = ${f(R.Ip,2)} A.</p>
+<h4>4. Curto-circuito</h4><p>Icc rede = ${f(R.Iccp)} kA (${f(R.Scc,1)} MVA). Z total = ${f(R.Zt)} %. Icc secundário = ${f(R.Iccs)} kA. Elo ${R.elo}K; disjuntor geral ${R.dj} A com PdI ≥ ${f(R.Iccs,1)} kA. Cabo MT ${R.mt} mm² (seção térmica mín. ${f(R.smin,1)} mm², t = ${c.t} s).</p>
+<h4>5. Condutores e queda de tensão</h4>${tb(['Trecho','L (m)','I (A)','Cabo','ΔV %'],R.tc.map(x=>[x.n,x.l,f(x.I,1),`${x.np>1?x.np+'× ':''}${x.s} mm²`,f(x.dv)]))}<p>ΔV total BT ${f(R.dvT)} % (limite 4 %). Fator de correção adotado ${c.k}.</p>
+<h4>6. Aterramento</h4><p>ρ = ${c.rho} Ω·m; haste ${c.hn} m: R₁ = ${f(R.R1)} Ω. Adotadas ${R.nh} hastes, R = ${f(R.Rn)} Ω (limite ${c.lr} Ω).${R.Rn>N(c.lr)?' <b>NÃO ATENDE o limite: revisar (malha, tratamento do solo ou limite aplicável).</b>':''}</p>
+${posto()?`<h4>7. Áreas classificadas</h4>${tb(['Elemento','Dist. (m)','Mín. (m)','Situação'],R.z.map(x=>[x.n,f(x.d,1),f(x.m,1),{ok:'Atende',wa:'Folga reduzida',er:'NÃO ATENDE — PENDENTE'}[x.s]]))}`:''}
+${LOCT()}<h4>8. Medição e resistividade</h4>${MTBL(R)}<p>ρ de projeto: ${c.rho} Ω·m${wn()}.</p><h4>9. Responsabilidade técnica</h4><p>Cálculos gerados por ferramenta de apoio; a validação das tabelas normativas e a responsabilidade pelo projeto são do profissional habilitado (ART/RRT nº ______).</p><p><br>_____________________________<br>Responsável técnico — CREA/CFT ______</p></div>`}
+function OUT(R){const sv=(d,A)=>svg(d.P,d.w,d.h,A);
+if(out=='mem'){const h=mem(R);return{h,txt:'<meta charset="utf-8">'+h,name:'memorial.html',mime:'text/html'}}
+if(out=='loc'){const d=loc();return{h:LG+sv(d,an)+LOCT(),txt:sv(d),name:'localizacao.svg',mime:'image/svg+xml'}}
+if(out=='med'){const d=med(R);return{h:LG+sv(d,an)+MTBL(R),txt:sv(d),name:'medicao.svg',mime:'image/svg+xml'}}
+if(out=='wen')return{h:`<h3>Ficha de ensaio de resistividade — método de Wenner</h3><p>Cliente: ${esc(S.g.nome)} · Data: ____/____/______ · Instrumento: ______________ · Solo/umidade: ______________</p><p class="m">ρ = 2·π·a·R (a em m, R em Ω)</p>`+WRES(),txt:JSON.stringify(S.w,null,1),name:'wenner.json',mime:'application/json'};
+if(out=='prj')return{h:PRJ(),txt:JSON.stringify(S,null,1),name:'projeto.json',mime:'application/json'};
+if(out=='all'){const a=uni(R),b=pla(R),c=ter(R),o1=a.P.length*.05+.5,o2=o1+b.P.length*.05+.5;return{h:LG+`<h4>1. Diagrama unifilar</h4>${svg(a.P,a.w,a.h,an,0)}<h4>2. Planta de implantação</h4>${svg(b.P,b.w,b.h,an,o1)}<h4>3. Esquema de aterramento</h4>${svg(c.P,c.w,c.h,an,o2)}`,txt:dxf(R),name:'projeto.dxf',mime:'application/dxf'}}
+if(out=='uni'){const d=uni(R);return{h:LG+sv(d,an),txt:sv(d),name:'unifilar.svg',mime:'image/svg+xml'}}
+if(out=='pla'){const d=pla(R);return{h:LG+sv(d,an),txt:sv(d),name:'planta.svg',mime:'image/svg+xml'}}
+if(out=='ter'){const d=ter(R);return{h:LG+sv(d,an),txt:sv(d),name:'aterramento.svg',mime:'image/svg+xml'}}
+if(out=='mat'){const r=mat(R),h=['Item','Especificação','Qtd','Un','Código'];return{h:tb(h,r),txt:[h,...r].map(x=>x.join(';')).join('\n'),name:'materiais.csv',mime:'text/csv'}}
+if(out=='dxf'){const t=dxf(R);return{h:`<p class="m">Unifilar, planta e aterramento lado a lado, em um único DXF.</p><textarea readonly>${esc(t)}</textarea>`,txt:t,name:'projeto.dxf',mime:'application/dxf'}}
+const t=JSON.stringify(S,null,1);return{h:`<textarea readonly>${esc(t)}</textarea>`,txt:t,name:'projeto.json',mime:'application/json'}}
+
+function render(){document.documentElement.style.setProperty('--ac',['#2f7de1','#2f9e44','#e03131','#e67700','#7048e8','#0c8599','#d6336c'][st]);$('#st').innerHTML=ST.map((s,k)=>`<button class="${k==st?'on':''}" data-s="${k}">${k+1}. ${s}</button>`).join('');$('#v').innerHTML=V[st]();upd()}
+function upd(){const r=$('#res');if(r)r.innerHTML=RS[st]()}
+document.addEventListener('input',ev=>{const c=ev.target.dataset.c;if(c){CFG[c]=ev.target.value;cs();return}const p=ev.target.dataset.p;if(!p)return;set(p,ev.target.value);if(/^cg\.\d+\.c$/.test(p)){S.cg[+p.split('.')[1]].fd=FDc[ev.target.value];save();render();return}save();upd()});
+document.addEventListener('click',ev=>{const sv=ev.target.closest('#mp');if(sv){MAPCLK(ev,sv);return}const b=ev.target.closest('button');if(!b)return;const d=b.dataset;
+if(PA[d.a]){PA[d.a](d);return}
+if(d.a=='dl'||d.a=='cp'){const o=OUT(calc());if(d.a=='cp'){try{navigator.clipboard.writeText(o.txt)}catch(_){}}else saveFile(o.name,new Blob([o.txt],{type:o.mime}));return}
+if(d.s!=null){st=+d.s;an=1;scrollTo(0,0)}else if(d.n){st=Math.max(0,Math.min(6,st+ +d.n));an=1;scrollTo(0,0)}else if(d.o){out=d.o;an=1}else if(d.a=='an')an=1;
+else if(d.a=='add')S.cg.push({d:'Nova carga',c:'Outros',q:1,p:1,fp:.9,fd:.7});else if(d.a=='del')S.cg.splice(+d.k,1);else return;save();render()});
+render();
+</script></body></html>
